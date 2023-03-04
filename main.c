@@ -2,22 +2,25 @@
 #include <stdlib.h>
 #include "pgm.h"
 #include "error.h"
+#include "pgmFile.h"
 
 int main(int argc, char **argv)
 {
     if (argc != 3)
     {
-        printf("Usage: %s inputImage.pgm outputImage.pgm\n", argv[0]);
+        printf("ERROR: Bad Argument Count");
         return EXIT_WRONG_ARG_COUNT;
     }
 
     char *inputFile = argv[1];
     char *outputFile = argv[2];
-    PGMImage *pgm = {
-        0,
-        0,
-        255,
-        NULL
+    
+    struct PGMImage *pgm = &(PGMImage) {
+        .width = 0,
+        .height = 0,
+        .maxGray = 255,
+        .imageData = NULL,
+        .commentLine = NULL
     };
 
     int readResult = readPGM(inputFile, pgm);
@@ -25,16 +28,16 @@ int main(int argc, char **argv)
     {
         handleError(readResult, inputFile);
         return readResult;
-    }
+    }./
 
     int writeResult = writePGM(outputFile, pgm);
     if (writeResult != EXIT_NO_ERRORS)
     {
         handleError(writeResult, outputFile);
-        free(pgm->imageData);
         return writeResult;
     }
 
-    free(pgm->imageData);
+    free(pgm->commentLine);
+	free(pgm->imageData);
     return EXIT_NO_ERRORS;
 }
