@@ -6,11 +6,11 @@
 
 int main(int argc, char **argv)
 {
-    if (argc != 3)
-    {
-        printf("ERROR: Bad Argument Count");
-        return EXIT_WRONG_ARG_COUNT;
-    }
+    int ar = judgeargc(argc, argv);
+    if (ar == 100)
+        return EXIT_NO_ERRORS;
+    else if (ar != EXIT_NO_ERRORS)
+        return ar;
 
     char *inputFile = argv[1];
     char *outputFile = argv[2];
@@ -20,7 +20,8 @@ int main(int argc, char **argv)
         .height = 0,
         .maxGray = 255,
         .imageData = NULL,
-        .commentLine = NULL
+        .commentLine = NULL,
+        .nImageBytes = 0
     };
 
     int readResult = readPGM(inputFile, pgm);
@@ -28,7 +29,7 @@ int main(int argc, char **argv)
     {
         handleError(readResult, inputFile);
         return readResult;
-    }./
+    }
 
     int writeResult = writePGM(outputFile, pgm);
     if (writeResult != EXIT_NO_ERRORS)

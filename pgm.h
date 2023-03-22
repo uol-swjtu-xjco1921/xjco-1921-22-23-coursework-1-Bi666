@@ -1,8 +1,8 @@
-#ifndef PGM_H
-#define PGM_H
-
 #include <stdio.h>
 #include <stdlib.h>
+
+#ifndef PGM_H
+#define PGM_H
 
 #define EXIT_NO_ERRORS 0
 #define EXIT_WRONG_ARG_COUNT 1
@@ -14,6 +14,7 @@
 #define EXIT_MALLOC_FAILED 7
 #define EXIT_BAD_DATA 8
 #define EXIT_OUTPUT_FAILED 9
+#define EXIT_MISCELLANEOUS 100
 
 #define MAGIC_NUMBER_RAW_PGM 0x3550
 #define MAGIC_NUMBER_ASCII_PGM 0x3250
@@ -27,6 +28,7 @@ typedef struct PGMImage {
     unsigned int maxGray;
     unsigned char *imageData;
     char *commentLine;
+    long nImageBytes;
 } PGMImage;
 
 #endif

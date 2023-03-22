@@ -3,22 +3,56 @@
 #include "pgm.h"
 #include "pgmFile.h"
 
+int judgeargc(int argc, char **argv)
+{
+    if (argc == 1)
+    {
+        printf("Usage: %s inputImage.pgm outputImage.pgm", argv[0]);
+        return 100;
+    }
+    if (argc != 3)
+    {
+        printf("ERROR: Bad Argument Count");
+        return EXIT_WRONG_ARG_COUNT;
+    }
+    return EXIT_NO_ERRORS;
+}
+
 int readPGM(const char *filename, PGMImage *pgm)
 {
-    // Read magic number
-    unsigned char magic_number[2] = {'0','0'};
-    unsigned short *magic_Number = (unsigned short *) magic_number;
     FILE *inputFile = fopen(filename, "r");
     if (inputFile == NULL)
         return EXIT_BAD_FILE_NAME;
+    // Read magic number
+    if (inputFile == NULL)
+        return EXIT_BAD_FILE_NAME;
+    int dataResult = magic(inputFile, pgm);
+    if (dataResult != EXIT_NO_ERRORS)
+        return dataResult;
+    fclose(inputFile);
+    return EXIT_NO_ERRORS;
+}
+
+int magic(FILE *inputFile, PGMImage *pgm)
+{
+    unsigned char magic_number[2] = {'0','0'};
+    unsigned short *magic_Number = (unsigned short *) magic_number;
     magic_number[0] = getc(inputFile);
     magic_number[1] = getc(inputFile);
     // Check magic number
-    if (*magic_Number != MAGIC_NUMBER_ASCII_PGM)
+    if (*magic_Number == MAGIC_NUMBER_RAW_PGM && *magic_Number == MAGIC_NUMBER_ASCII_PGM)
     {
         fclose(inputFile);
         return EXIT_BAD_MAGIC_NUMBER;
     }
+    int dataResult = dimen(inputFile, pgm);
+    if (dataResult != EXIT_NO_ERRORS)
+        return dataResult;
+    return EXIT_NO_ERRORS;
+}
+
+int dimen(FILE *inputFile, PGMImage *pgm)
+{
     int scanCount = fscanf(inputFile, " ");
     // Read comment line if present
     char nextChar = fgetc(inputFile);
@@ -33,10 +67,7 @@ int readPGM(const char *filename, PGMImage *pgm)
             return EXIT_COMMENT_LINE;
         }
     }
-    else
-    {
-        ungetc(nextChar, inputFile);
-    }
+    else ungetc(nextChar, inputFile);
     // Read image dimensions and max gray value
     scanCount = fscanf(inputFile, " %u %u %u", &(pgm->width), &(pgm->height), &(pgm->maxGray));
     if  (
@@ -56,9 +87,9 @@ int readPGM(const char *filename, PGMImage *pgm)
 		fclose(inputFile);
 		return EXIT_BAD_MAXGRAY;
     }
-    long nImageBytes = (pgm->width) * (pgm->height) * sizeof(unsigned char);
+    pgm->nImageBytes = (pgm->width) * (pgm->height) * sizeof(unsigned char);
     // Allocate memory for image data
-    pgm->imageData = (unsigned char *)malloc(nImageBytes);
+    pgm->imageData = (unsigned char *)malloc(pgm->nImageBytes);
     if (pgm->imageData == NULL)
 	{
 		free(pgm->commentLine);
@@ -66,7 +97,7 @@ int readPGM(const char *filename, PGMImage *pgm)
 		return EXIT_MALLOC_FAILED;
 	}
 
-    for (unsigned char *nextGrayValue = pgm->imageData; nextGrayValue < pgm->imageData + nImageBytes; nextGrayValue++)
+    for (unsigned char *nextGrayValue = pgm->imageData; nextGrayValue < pgm->imageData + pgm->nImageBytes; nextGrayValue++)
     {
         int grayValue = -1;
 		int scanCount = fscanf(inputFile, " %u", &grayValue);
@@ -79,7 +110,7 @@ int readPGM(const char *filename, PGMImage *pgm)
 		}
 		*nextGrayValue = (unsigned char) grayValue;
 	}
-    fclose(inputFile);
+    return EXIT_NO_ERRORS;
 }
 
 int writePGM(const char *filename, PGMImage *pgm)
@@ -98,8 +129,7 @@ int writePGM(const char *filename, PGMImage *pgm)
 		free(pgm->imageData);
 		return EXIT_OUTPUT_FAILED;
 	}
-    long nImageBytes = (pgm->width) * (pgm->height) * sizeof(unsigned char);
-	for (unsigned char *nextGrayValue = pgm->imageData; nextGrayValue < pgm->imageData + nImageBytes; nextGrayValue++)
+	for (unsigned char *nextGrayValue = pgm->imageData; nextGrayValue < pgm->imageData + pgm->nImageBytes; nextGrayValue++)
 	{
 		int nextCol = (nextGrayValue - pgm->imageData + 1) % (pgm->width);
 		nBytesWritten = fprintf(outputFile, "%d%c", *nextGrayValue, (nextCol ? ' ' : '\n') );
@@ -110,5 +140,6 @@ int writePGM(const char *filename, PGMImage *pgm)
 			return EXIT_OUTPUT_FAILED;
 		}
 	}
-	return EXIT_NO_ERRORS;
+	
+     EXIT_NO_ERRORS;
 }
