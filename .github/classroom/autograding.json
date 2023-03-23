@@ -9,6 +9,66 @@
       "comparison": "included",
       "timeout": 5,
       "points": null
+    },
+    {
+      "name": "pgmEcho helper",
+      "setup": "make all",
+      "run": "./pgmEcho",
+      "input": "",
+      "output": "Usage: ./pgmEcho inputImage.pgm outputImage.pgm",
+      "comparison": "included",
+      "timeout": 1,
+      "points": null
+    },
+    {
+      "name": "pgma2b helper",
+      "setup": "make all",
+      "run": "./pgma2b",
+      "input": "",
+      "output": "Usage: ./pgma2b inputImage.pgm outputImage.pgm",
+      "comparison": "included",
+      "timeout": 1,
+      "points": null
+    },
+    {
+      "name": "pgmb2a helper",
+      "setup": "make all",
+      "run": "./pgmb2a",
+      "input": "",
+      "output": "Usage: ./pgmb2a inputImage.pgm outputImage.pgm",
+      "comparison": "included",
+      "timeout": 10,
+      "points": null
+    },
+    {
+      "name": "pgmComp helper",
+      "setup": "make all",
+      "run": "./pgmComp ",
+      "input": "",
+      "output": "Usage: ./pgmComp inputImage.pgm inputImage.pgm\r\n",
+      "comparison": "included",
+      "timeout": 1,
+      "points": null
+    },
+    {
+      "name": "pgmReduce helper",
+      "setup": "make all",
+      "run": "./pgmReduce",
+      "input": "",
+      "output": "Usage: ./pgmReduce inputImage.pgm reduction_factor outputImage.pgm\r\n",
+      "comparison": "included",
+      "timeout": 1,
+      "points": null
+    },
+    {
+      "name": "make clean",
+      "setup": "make all",
+      "run": "make clean",
+      "input": "",
+      "output": "",
+      "comparison": "included",
+      "timeout": 1,
+      "points": null
     }
   ]
 }
