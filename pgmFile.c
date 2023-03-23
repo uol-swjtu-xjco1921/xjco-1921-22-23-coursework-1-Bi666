@@ -45,13 +45,13 @@ int magic(FILE *inputFile, PGMImage *pgm)
         fclose(inputFile);
         return EXIT_BAD_MAGIC_NUMBER;
     }
-    int dataResult = dimen(inputFile, pgm);
+    int dataResult = dimen(inputFile, pgm, magic_Number);
     if (dataResult != EXIT_NO_ERRORS)
         return dataResult;
     return EXIT_NO_ERRORS;
 }
 
-int dimen(FILE *inputFile, PGMImage *pgm)
+int dimen(FILE *inputFile, PGMImage *pgm, unsigned short *magic_Number)
 {
     int scanCount = fscanf(inputFile, " ");
     // Read comment line if present
@@ -96,7 +96,22 @@ int dimen(FILE *inputFile, PGMImage *pgm)
 		fclose(inputFile);
 		return EXIT_MALLOC_FAILED;
 	}
+    if (*magic_Number == MAGIC_NUMBER_ASCII_PGM)
+    {
+        int dataResult = readASCII(inputFile, pgm);
+        if (dataResult != EXIT_NO_ERRORS)
+            return dataResult;
+    }
+    else if (*magic_Number == MAGIC_NUMBER_RAW_PGM)
+    {
+        int dataResult = readBINARY(inputFile, pgm);
+        if (dataResult != EXIT_NO_ERRORS)
+            return dataResult;
+    }
+    return EXIT_NO_ERRORS;
+}
 
+int readASCII(FILE *inputFile, PGMImage *pgm){
     for (unsigned char *nextGrayValue = pgm->imageData; nextGrayValue < pgm->imageData + pgm->nImageBytes; nextGrayValue++)
     {
         int grayValue = -1;
@@ -113,7 +128,22 @@ int dimen(FILE *inputFile, PGMImage *pgm)
     return EXIT_NO_ERRORS;
 }
 
-int writePGM(const char *filename, PGMImage *pgm)
+int readBINARY(FILE *inputFile, PGMImage *pgm)
+{
+    unsigned char line;
+    fread(&line, sizeof(unsigned char),  1, inputFile);
+    size_t nBytes = fread(pgm->imageData, sizeof(unsigned char),  pgm->width * pgm->height, inputFile);
+    if (nBytes != pgm->width * pgm->height)
+    {
+        free(pgm->commentLine);
+        free(pgm->imageData);
+        fclose(inputFile);
+        return EXIT_BAD_DATA;
+    }
+    return EXIT_NO_ERRORS;
+}
+
+int writeASCII(const char *filename, PGMImage *pgm)
 {
     FILE *outputFile = fopen(filename, "w");
     if (outputFile == NULL)
@@ -140,6 +170,35 @@ int writePGM(const char *filename, PGMImage *pgm)
 			return EXIT_OUTPUT_FAILED;
 		}
 	}
-	
-     EXIT_NO_ERRORS;
+    return EXIT_NO_ERRORS;
+}
+
+int writeBINARY(const char *filename, PGMImage *pgm)
+{
+    FILE *outputFile = fopen(filename, "w");
+    if (outputFile == NULL)
+	{ 
+		free(pgm->commentLine);
+		free(pgm->imageData);
+		return EXIT_OUTPUT_FAILED;
+	}
+	size_t nBytesWritten = fprintf(outputFile, "P2\n%d %d\n%d\n", pgm->width, pgm->height, pgm->maxGray);
+	if (nBytesWritten < 0)
+	{
+		free(pgm->commentLine);
+		free(pgm->imageData);
+		return EXIT_OUTPUT_FAILED;
+	}
+    for (unsigned char *nextGrayValue = pgm->imageData; nextGrayValue < pgm->imageData + pgm->nImageBytes; nextGrayValue++)
+	{
+		int nextCol = (nextGrayValue - pgm->imageData + 1) % (pgm->width);
+        nBytesWritten = fputc(*nextGrayValue, outputFile);
+		if (nBytesWritten < 0)
+		{
+			free(pgm->commentLine);
+			free(pgm->imageData);
+			return EXIT_OUTPUT_FAILED;
+		}
+	}
+    return EXIT_NO_ERRORS;
 }

@@ -3,7 +3,7 @@
 #include "pgm.h"
 #include "error.h"
 
-int handleError(char readResult, const char *filename)
+void handleError(char readResult, const char *filename)
 {
     if (readResult == EXIT_WRONG_ARG_COUNT)
         printf("ERROR: Bad Argument Count");

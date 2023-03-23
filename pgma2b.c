@@ -31,7 +31,7 @@ int main(int argc, char **argv)
         return readResult;
     }
 
-    int writeResult = writeASCII(outputFile, pgm);
+    int writeResult = writeBINARY(outputFile, pgm);
     if (writeResult != EXIT_NO_ERRORS)
     {
         handleError(writeResult, outputFile);
