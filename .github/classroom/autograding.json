@@ -1,0 +1,14 @@
+{
+  "tests": [
+    {
+      "name": "gcc build test",
+      "setup": "",
+      "run": "make all",
+      "input": "",
+      "output": "",
+      "comparison": "included",
+      "timeout": 5,
+      "points": null
+    }
+  ]
+}
