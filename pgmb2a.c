@@ -40,5 +40,6 @@ int main(int argc, char **argv)
 
     free(pgm->commentLine);
 	free(pgm->imageData);
+    printf("CONVERTED");
     return EXIT_NO_ERRORS;
 }
