@@ -8,7 +8,7 @@
       "output": "",
       "comparison": "included",
       "timeout": 5,
-      "points": null
+      "points": 10
     },
     {
       "name": "pgmEcho helper",
@@ -18,7 +18,7 @@
       "output": "Usage: ./pgmEcho inputImage.pgm outputImage.pgm",
       "comparison": "included",
       "timeout": 1,
-      "points": null
+      "points": 10
     },
     {
       "name": "pgma2b helper",
@@ -28,7 +28,7 @@
       "output": "Usage: ./pgma2b inputImage.pgm outputImage.pgm",
       "comparison": "included",
       "timeout": 1,
-      "points": null
+      "points": 10
     },
     {
       "name": "pgmb2a helper",
@@ -38,7 +38,7 @@
       "output": "Usage: ./pgmb2a inputImage.pgm outputImage.pgm",
       "comparison": "included",
       "timeout": 10,
-      "points": null
+      "points": 10
     },
     {
       "name": "pgmComp helper",
@@ -48,7 +48,7 @@
       "output": "Usage: ./pgmComp inputImage.pgm inputImage.pgm\r\n",
       "comparison": "included",
       "timeout": 1,
-      "points": null
+      "points": 10
     },
     {
       "name": "pgmReduce helper",
@@ -58,7 +58,7 @@
       "output": "Usage: ./pgmReduce inputImage.pgm reduction_factor outputImage.pgm\r\n",
       "comparison": "included",
       "timeout": 1,
-      "points": null
+      "points": 10
     },
     {
       "name": "make clean",
@@ -68,7 +68,7 @@
       "output": "",
       "comparison": "included",
       "timeout": 1,
-      "points": null
+      "points": 10
     }
   ]
 }
