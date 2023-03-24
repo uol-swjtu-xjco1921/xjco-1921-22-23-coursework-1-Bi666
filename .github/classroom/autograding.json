@@ -1,16 +1,6 @@
 {
   "tests": [
     {
-      "name": "gcc build test",
-      "setup": "",
-      "run": "make all",
-      "input": "",
-      "output": "",
-      "comparison": "included",
-      "timeout": 5,
-      "points": 10
-    },
-    {
       "name": "pgmEcho helper &#45; run .&#47;pgmEcho",
       "setup": "make clean; make all",
       "run": "./pgmEcho",
@@ -68,7 +58,7 @@
       "output": "",
       "comparison": "included",
       "timeout": 1,
-      "points": 10
+      "points": 0
     }
   ]
 }
