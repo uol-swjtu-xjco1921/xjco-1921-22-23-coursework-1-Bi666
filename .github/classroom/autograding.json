@@ -11,8 +11,8 @@
       "points": 10
     },
     {
-      "name": "pgmEcho helper",
-      "setup": "make all",
+      "name": "pgmEcho helper &#45; run .&#47;pgmEcho",
+      "setup": "make clean; make all",
       "run": "./pgmEcho",
       "input": "",
       "output": "Usage: ./pgmEcho inputImage.pgm outputImage.pgm",
@@ -21,8 +21,8 @@
       "points": 10
     },
     {
-      "name": "pgma2b helper",
-      "setup": "make all",
+      "name": "pgma2b helper run .&#47;pgma2b",
+      "setup": "make clean; make all",
       "run": "./pgma2b",
       "input": "",
       "output": "Usage: ./pgma2b inputImage.pgm outputImage.pgm",
@@ -31,8 +31,8 @@
       "points": 10
     },
     {
-      "name": "pgmb2a helper",
-      "setup": "make all",
+      "name": "pgmb2a helper &#45; run .&#47;pgmb2a",
+      "setup": "make clean; make all",
       "run": "./pgmb2a",
       "input": "",
       "output": "Usage: ./pgmb2a inputImage.pgm outputImage.pgm",
@@ -41,8 +41,8 @@
       "points": 10
     },
     {
-      "name": "pgmComp helper",
-      "setup": "make all",
+      "name": "pgmComp helper &#45; try to run .&#47;pgmComp ",
+      "setup": "make clean; make all",
       "run": "./pgmComp ",
       "input": "",
       "output": "Usage: ./pgmComp inputImage.pgm inputImage.pgm\r\n",
@@ -51,7 +51,7 @@
       "points": 10
     },
     {
-      "name": "pgmReduce helper",
+      "name": "pgmReduce helper &#45; run .&#47;pgmReduce",
       "setup": "make all",
       "run": "./pgmReduce",
       "input": "",
