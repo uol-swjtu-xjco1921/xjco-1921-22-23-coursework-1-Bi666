@@ -8,7 +8,7 @@
 
 int main(int argc, char *argv[]) {
     int ar = compargc(argc, argv);
-    if (ar == 100)
+    if (ar == 2)
         return EXIT_NO_ERRORS;
     else if (ar != EXIT_NO_ERRORS)
         return ar;

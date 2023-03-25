@@ -8,7 +8,7 @@ int judgeargc(int argc, char **argv)
     if (argc == 1)
     {
         printf("Usage: %s inputImage.pgm outputImage.pgm", argv[0]);
-        return 100;
+        return 2;
     }
     if (argc != 3)
     {
