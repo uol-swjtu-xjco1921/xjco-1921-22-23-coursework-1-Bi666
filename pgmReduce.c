@@ -16,32 +16,14 @@ int main(int argc, char **argv)
     char *inputFile = argv[1];
     char *outputFile = argv[3];
     char *endptr;
-    long int n = strtol(argv[2], &endptr, 10);
-    if (*endptr != '\0') {
-        printf("Factor n is not a integer");
-        return EXIT_MISCELLANEOUS;
-    }
-    else if (n == 0) {
+    int n = strtol(argv[2], &endptr, 10);
+    if (*endptr != '\0' || n == 0) {
         printf("Invalid Factor Integer n");
         return EXIT_MISCELLANEOUS;
     }
     
-    struct PGMImage *pgmorg = &(PGMImage) {
-        .width = 0,
-        .height = 0,
-        .maxGray = 255,
-        .imageData = NULL,
-        .commentLine = NULL,
-        .nImageBytes = 0
-    };
-    struct PGMImage *pgmnew = &(PGMImage) {
-        .width = 0,
-        .height = 0,
-        .maxGray = 255,
-        .imageData = NULL,
-        .commentLine = NULL,
-        .nImageBytes = 0
-    };
+    struct PGMImage *pgmorg = NULL;
+    struct PGMImage *pgmnew = NULL;
 
     int readResult = readPGM(inputFile, pgmorg);
     if (readResult != EXIT_NO_ERRORS)
@@ -50,18 +32,24 @@ int main(int argc, char **argv)
         return readResult;
     }
 
+    pgmnew = (PGMImage*)malloc(sizeof(PGMImage));
     reducePGM(n, pgmorg, pgmnew);
 
     int writeResult = writeASCII(outputFile, pgmnew);
     if (writeResult != EXIT_NO_ERRORS)
-    {
         handleError(writeResult, outputFile);
-        return writeResult;
-    }
 
     free(pgmorg->commentLine);
+    pgmorg->commentLine = NULL;
 	free(pgmorg->imageData);
+    pgmorg->imageData = NULL;
+    free(pgmorg);
+    pgmorg = NULL;
     free(pgmnew->commentLine);
+    pgmnew->commentLine = NULL;
 	free(pgmnew->imageData);
+    pgmnew->imageData = NULL;
+    free(pgmnew);
+    pgmnew = NULL;
     return EXIT_NO_ERRORS;
 }

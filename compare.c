@@ -29,8 +29,8 @@ void comparePGM(PGMImage *pgm1, PGMImage *pgm2)
     unsigned char *nextGrayValue2 = pgm2->imageData;
     for (; nextGrayValue1 < pgm1->imageData + pgm1->nImageBytes; nextGrayValue1++, nextGrayValue2++){
         if (*nextGrayValue1 != *nextGrayValue2){
-             printf("DIFFERENT");
-             return;
+            printf("DIFFERENT");
+            return;
         }
     }
     printf("IDENTICAL");

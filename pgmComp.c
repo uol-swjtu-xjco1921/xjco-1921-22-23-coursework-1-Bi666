@@ -16,22 +16,8 @@ int main(int argc, char *argv[]) {
     char *filename1 = argv[1];
     char *filename2 = argv[2];
 
-    struct PGMImage *pgm1 = &(PGMImage) {
-        .width = 0,
-        .height = 0,
-        .maxGray = 255,
-        .imageData = NULL,
-        .commentLine = NULL,
-        .nImageBytes = 0
-    };
-    struct PGMImage *pgm2 = &(PGMImage) {
-        .width = 0,
-        .height = 0,
-        .maxGray = 255,
-        .imageData = NULL,
-        .commentLine = NULL,
-        .nImageBytes = 0
-    };
+    struct PGMImage *pgm1 = NULL;
+    struct PGMImage *pgm2 = NULL;
 
     int readResult = readPGM(filename1, pgm1);
     if (readResult != EXIT_NO_ERRORS)
@@ -45,10 +31,18 @@ int main(int argc, char *argv[]) {
         handleError(readResult, filename1);
         return readResult;
     }
+    
     comparePGM(pgm1, pgm2);
+
     free(pgm1->commentLine);
-	free(pgm1->imageData);
+    pgm1->commentLine = NULL;
+	free(pgm-1>imageData);
+    pgm1->imageData = NULL;
     free(pgm2->commentLine);
+    pgm2->commentLine = NULL;
 	free(pgm2->imageData);
+    pgm2->imageData = NULL;
+    free(pgm2);
+    pgm2 = NULL;
     return EXIT_NO_ERRORS;
 }
