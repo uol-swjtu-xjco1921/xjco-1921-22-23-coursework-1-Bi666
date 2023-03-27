@@ -5,8 +5,6 @@
 
 void handleError(char readResult, const char *filename)
 {
-    if (readResult == EXIT_WRONG_ARG_COUNT)
-        printf("ERROR: Bad Argument Count");
     if (readResult == EXIT_BAD_FILE_NAME)
         printf("ERROR: Bad File Name (%s)", filename);
     if (readResult == EXIT_BAD_MAGIC_NUMBER)

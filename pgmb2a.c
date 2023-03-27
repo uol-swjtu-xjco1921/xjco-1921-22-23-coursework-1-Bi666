@@ -7,7 +7,7 @@
 int main(int argc, char **argv)
 {
     int ar = judgeargc(argc, argv);
-    if (ar == 100)
+    if (ar == 2)
         return EXIT_NO_ERRORS;
     else if (ar != EXIT_NO_ERRORS)
         return ar;
@@ -15,14 +15,12 @@ int main(int argc, char **argv)
     char *inputFile = argv[1];
     char *outputFile = argv[2];
     
-    struct PGMImage *pgm = &(PGMImage) {
-        .width = 0,
-        .height = 0,
-        .maxGray = 255,
-        .imageData = NULL,
-        .commentLine = NULL,
-        .nImageBytes = 0
-    };
+    PGMImage *pgm = (PGMImage*)malloc(sizeof(PGMImage));
+    if (pgm == NULL) 
+    {
+        handleError(EXIT_MALLOC_FAILED, inputFile);
+        return EXIT_MALLOC_FAILED;
+    }
 
     int readResult = readPGM(inputFile, pgm);
     if (readResult != EXIT_NO_ERRORS)
@@ -33,12 +31,14 @@ int main(int argc, char **argv)
 
     int writeResult = writeASCII(outputFile, pgm);
     if (writeResult != EXIT_NO_ERRORS)
-    {
         handleError(writeResult, outputFile);
-        return writeResult;
-    }
 
+    printf("CONVERTED");
     free(pgm->commentLine);
+    pgm->commentLine = NULL;
 	free(pgm->imageData);
+    pgm->imageData = NULL;
+    free(pgm);
+    pgm = NULL;
     return EXIT_NO_ERRORS;
 }

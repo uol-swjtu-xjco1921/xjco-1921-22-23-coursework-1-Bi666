@@ -89,7 +89,7 @@ run_test ()
 # you can remove or comment out any executables you don't want to test
 # full list of executables: pgmEcho pgmComp etc.
 # E.g. EXES = (pgmEcho pgmComp)
-EXES=(pgmEcho)
+EXES=(main)
 
 # run all of the tests below for all executables given in 'EXES'
 # inside this loop, the executable being run can be referred to by 'testExecutable'
@@ -154,7 +154,7 @@ do
     echo "Bad Dimensions (big)"
     filename="bad_dimensions.pgm"
     full_path=$path$filename
-    run_test ./$testExecutable $full_path "tmp" 4 "ERROR: Bad Dimensions ($full_path)"
+    run_test ./$testExecutable $full_path "tmp" 5 "ERROR: Bad Dimensions ($full_path)"
 
     ### Functionality Tests ###
 
@@ -176,7 +176,7 @@ do
         echo "Testing $testExecutable Functionality"
         filename="slice0a.pgm"
         full_path=$path$filename
-	oracle=$oracle_path"pgmEcho/"$filename
+	oracle=$oracle_path"main/"$filename
         run_test ./$testExecutable $full_path "tmp" 0 "ECHOED"
         D=$(diff $oracle tmp)
         if [[ $D != "" ]]

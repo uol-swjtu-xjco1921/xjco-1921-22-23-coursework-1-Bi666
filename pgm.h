@@ -29,6 +29,7 @@ typedef struct PGMImage {
     unsigned char *imageData;
     char *commentLine;
     long nImageBytes;
+    unsigned short magic;
 } PGMImage;
 
 #endif
