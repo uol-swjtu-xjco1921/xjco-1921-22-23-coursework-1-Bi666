@@ -15,24 +15,29 @@ int main(int argc, char **argv)
     char *inputFile = argv[1];
     char *outputFile = argv[2];
     
-    struct PGMImage *pgm = NULL;
+    PGMImage *pgmE = (PGMImage*)malloc(sizeof(PGMImage));
+    if (pgmE == NULL) 
+    {
+        handleError(EXIT_MALLOC_FAILED, inputFile);
+        return EXIT_MALLOC_FAILED;
+    }
 
-    int readResult = readPGM(inputFile, pgm);
+    int readResult = readPGM(inputFile, pgmE);
     if (readResult != EXIT_NO_ERRORS)
     {
         handleError(readResult, inputFile);
         return readResult;
     }
 
-    int writeResult = writeASCII(outputFile, pgm);
+    int writeResult = writeASCII(outputFile, pgmE);
     if (writeResult != EXIT_NO_ERRORS)
         handleError(writeResult, outputFile);
         
-    free(pgm->commentLine);
-    pgm->commentLine = NULL;
-	free(pgm->imageData);
-    pgm->imageData = NULL;
-    free(pgm);
-    pgm = NULL;
+    free(pgmE->commentLine);
+    pgmE->commentLine = NULL;
+	free(pgmE->imageData);
+    pgmE->imageData = NULL;
+    free(pgmE);
+    pgmE = NULL;
     return writeResult;
 }

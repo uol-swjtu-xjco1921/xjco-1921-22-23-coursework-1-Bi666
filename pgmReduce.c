@@ -22,8 +22,13 @@ int main(int argc, char **argv)
         return EXIT_MISCELLANEOUS;
     }
     
-    struct PGMImage *pgmorg = NULL;
-    struct PGMImage *pgmnew = NULL;
+    PGMImage *pgmorg = (PGMImage*)malloc(sizeof(PGMImage));
+    PGMImage *pgmnew = (PGMImage*)malloc(sizeof(PGMImage));
+    if (pgmorg == NULL || pgmnew == NULL) 
+    {
+        handleError(EXIT_MALLOC_FAILED, inputFile);
+        return EXIT_MALLOC_FAILED;
+    }
 
     int readResult = readPGM(inputFile, pgmorg);
     if (readResult != EXIT_NO_ERRORS)
@@ -32,10 +37,18 @@ int main(int argc, char **argv)
         return readResult;
     }
 
-    pgmnew = (PGMImage*)malloc(sizeof(PGMImage));
-    reducePGM(n, pgmorg, pgmnew);
-
-    int writeResult = writeASCII(outputFile, pgmnew);
+    int reduceResult = reducePGM(n, pgmorg, pgmnew);
+    if (reduceResult != EXIT_NO_ERRORS)
+    {
+        handleError(reduceResult, inputFile);
+        return reduceResult;
+    }
+    
+    int writeResult = 0;
+    if (pgmnew->magic == MAGIC_NUMBER_ASCII_PGM)
+        writeResult = writeASCII(outputFile, pgmnew);
+    else 
+        writeResult = writeBINARY(outputFile, pgmnew);
     if (writeResult != EXIT_NO_ERRORS)
         handleError(writeResult, outputFile);
 
@@ -49,5 +62,5 @@ int main(int argc, char **argv)
     pgmnew->imageData = NULL;
     free(pgmnew);
     pgmnew = NULL;
-    return EXIT_NO_ERRORS;
+    return writeResult;
 }

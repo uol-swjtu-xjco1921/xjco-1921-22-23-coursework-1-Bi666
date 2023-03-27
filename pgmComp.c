@@ -16,8 +16,13 @@ int main(int argc, char *argv[]) {
     char *filename1 = argv[1];
     char *filename2 = argv[2];
 
-    struct PGMImage *pgm1 = NULL;
-    struct PGMImage *pgm2 = NULL;
+    PGMImage *pgm1 = (PGMImage*)malloc(sizeof(PGMImage));
+    PGMImage *pgm2 = (PGMImage*)malloc(sizeof(PGMImage));
+    if (pgm1 == NULL || pgm2 == NULL) 
+    {
+        handleError(EXIT_MALLOC_FAILED, filename1);
+        return EXIT_MALLOC_FAILED;
+    }
 
     int readResult = readPGM(filename1, pgm1);
     if (readResult != EXIT_NO_ERRORS)
@@ -36,7 +41,7 @@ int main(int argc, char *argv[]) {
 
     free(pgm1->commentLine);
     pgm1->commentLine = NULL;
-	free(pgm-1>imageData);
+	free(pgm1->imageData);
     pgm1->imageData = NULL;
     free(pgm2->commentLine);
     pgm2->commentLine = NULL;

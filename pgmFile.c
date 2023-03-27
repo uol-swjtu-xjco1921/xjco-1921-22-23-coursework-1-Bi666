@@ -24,8 +24,6 @@ int readPGM(const char *filename, PGMImage *pgm)
     if (inputFile == NULL)
         return EXIT_BAD_FILE_NAME;
     // Read magic number
-    if (inputFile == NULL)
-        return EXIT_BAD_FILE_NAME;
     int dataResult = magic(inputFile, pgm);
     if (dataResult != EXIT_NO_ERRORS)
         return dataResult;
@@ -45,11 +43,14 @@ int magic(FILE *inputFile, PGMImage *pgm)
         fclose(inputFile);
         return EXIT_BAD_MAGIC_NUMBER;
     }
+    pgm->magic = *magic_Number;
     int dataResult = dimen(inputFile, pgm, magic_Number);
     if (dataResult != EXIT_NO_ERRORS)
     {
         free(pgm->commentLine);
         pgm->commentLine = NULL;
+        free(pgm);
+        pgm = NULL;
         return dataResult;
     }
     return EXIT_NO_ERRORS;
@@ -63,6 +64,11 @@ int dimen(FILE *inputFile, PGMImage *pgm, unsigned short *magic_Number)
     if (nextChar == '#')
     {
         pgm->commentLine = (char *) malloc(MAX_COMMENT_LINE_LENGTH);
+        if (pgm->commentLine == NULL)
+        {
+            fclose(inputFile);
+            return EXIT_MALLOC_FAILED;
+        }
         char *commentString = fgets(pgm->commentLine, MAX_COMMENT_LINE_LENGTH, inputFile);
         if (commentString == NULL)
         {
@@ -175,7 +181,7 @@ int writeBINARY(const char *filename, PGMImage *pgm)
     FILE *outputFile = fopen(filename, "w");
     if (outputFile == NULL)
 		return EXIT_OUTPUT_FAILED;
-	size_t nBytesWritten = fprintf(outputFile, "P2\n%d %d\n%d\n", pgm->width, pgm->height, pgm->maxGray);
+	size_t nBytesWritten = fprintf(outputFile, "P5\n%d %d\n%d\n", pgm->width, pgm->height, pgm->maxGray);
 	if (nBytesWritten < 0)
 	{
 		fclose(outputFile);

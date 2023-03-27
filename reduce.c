@@ -19,12 +19,26 @@ int reduargc(int argc, char **argv)
     return EXIT_NO_ERRORS;
 }
 
-void reducePGM(int n, PGMImage *pgmorg, PGMImage *pgmnew)
+int reducePGM(int n, PGMImage *pgmorg, PGMImage *pgmnew)
 {
+    pgmnew->magic = pgmorg->magic;
+    pgmnew->maxGray = 255;
     pgmnew->width = (pgmorg->width - 1) / n + 1;
     pgmnew->height = (pgmorg->height - 1) / n + 1;;
     pgmnew->nImageBytes = (pgmnew->width) * (pgmnew->height) * sizeof(unsigned char);
     pgmnew->imageData = (unsigned char *)malloc(pgmnew->nImageBytes);
+    if (pgmnew->imageData == NULL) 
+    {
+        free(pgmorg->commentLine);
+        pgmorg->commentLine = NULL;
+        free(pgmorg->imageData);
+        pgmorg->imageData = NULL;
+        free(pgmorg);
+        pgmorg = NULL;
+        free(pgmnew);
+        pgmnew = NULL;
+        return EXIT_MALLOC_FAILED;
+    }
     unsigned char *next = pgmnew->imageData;
     for (int row = 0; row < pgmorg->height; row += n)
         for (int col = 0; col < pgmorg->width; col += n) {
@@ -32,4 +46,5 @@ void reducePGM(int n, PGMImage *pgmorg, PGMImage *pgmnew)
             *next = *nextGrayValue;
             next++;
         }
+    return EXIT_NO_ERRORS;
 }

@@ -15,7 +15,12 @@ int main(int argc, char **argv)
     char *inputFile = argv[1];
     char *outputFile = argv[2];
     
-    struct PGMImage *pgm = NULL;
+    PGMImage *pgm = (PGMImage*)malloc(sizeof(PGMImage));
+    if (pgm == NULL) 
+    {
+        handleError(EXIT_MALLOC_FAILED, inputFile);
+        return EXIT_MALLOC_FAILED;
+    }
 
     int readResult = readPGM(inputFile, pgm);
     if (readResult != EXIT_NO_ERRORS)
