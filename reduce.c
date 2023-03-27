@@ -21,8 +21,10 @@ int reduargc(int argc, char **argv)
 
 void reducePGM(int n, PGMImage *pgmorg, PGMImage *pgmnew)
 {
-    pgmnew->width = pgmorg->width / n;
-    pgmnew->height = pgmorg->height / n;
+    pgmnew->width = (pgmorg->width - 1) / n + 1;
+    pgmnew->height = (pgmorg->height - 1) / n + 1;;
+    pgmnew->nImageBytes = (pgmnew->width) * (pgmnew->height) * sizeof(unsigned char);
+    pgmnew->imageData = (unsigned char *)malloc(pgmnew->nImageBytes);
     unsigned char *next = pgmnew->imageData;
     for (int row = 0; row < pgmorg->height; row += n)
         for (int col = 0; col < pgmorg->width; col += n) {

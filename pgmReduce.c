@@ -45,8 +45,6 @@ int main(int argc, char **argv)
     pgmorg->imageData = NULL;
     free(pgmorg);
     pgmorg = NULL;
-    free(pgmnew->commentLine);
-    pgmnew->commentLine = NULL;
 	free(pgmnew->imageData);
     pgmnew->imageData = NULL;
     free(pgmnew);
