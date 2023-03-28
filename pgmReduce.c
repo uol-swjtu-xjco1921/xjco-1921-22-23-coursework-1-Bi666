@@ -18,7 +18,7 @@ int main(int argc, char **argv)
     char *endptr;
     int n = strtol(argv[2], &endptr, 10);
     if (*endptr != '\0' || n == 0) {
-        printf("Invalid Factor Integer n");
+        printf("Invalid Factor Integer n\n");
         return EXIT_MISCELLANEOUS;
     }
     
@@ -45,13 +45,15 @@ int main(int argc, char **argv)
     }
     
     int writeResult = 0;
-    if (pgmnew->magic == MAGIC_NUMBER_ASCII_PGM)
+    if (pgmnew->magicNum == MAGIC_NUMBER_ASCII_PGM)
         writeResult = writeASCII(outputFile, pgmnew);
     else 
         writeResult = writeBINARY(outputFile, pgmnew);
     if (writeResult != EXIT_NO_ERRORS)
         handleError(writeResult, outputFile);
-
+    else
+        printf("REDUCED\n");
+    
     free(pgmorg->commentLine);
     pgmorg->commentLine = NULL;
 	free(pgmorg->imageData);

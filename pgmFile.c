@@ -7,12 +7,12 @@ int judgeargc(int argc, char **argv)
 {
     if (argc == 1)
     {
-        printf("Usage: %s inputImage.pgm outputImage.pgm", argv[0]);
+        printf("Usage: %s inputImage.pgm outputImage.pgm\n", argv[0]);
         return 2;
     }
     if (argc != 3)
     {
-        printf("ERROR: Bad Argument Count");
+        printf("ERROR: Bad Argument Count\n");
         return EXIT_WRONG_ARG_COUNT;
     }
     return EXIT_NO_ERRORS;
@@ -38,9 +38,9 @@ int magic(FILE *inputFile, PGMImage *pgm)
     magic_number[0] = getc(inputFile);
     magic_number[1] = getc(inputFile);
     // Check magic number
-    if (*magic_Number == MAGIC_NUMBER_RAW_PGM && *magic_Number == MAGIC_NUMBER_ASCII_PGM)
+    if (*magic_Number != MAGIC_NUMBER_RAW_PGM && *magic_Number != MAGIC_NUMBER_ASCII_PGM)
         return EXIT_BAD_MAGIC_NUMBER;
-    pgm->magic = *magic_Number;
+    pgm->magicNum = *magic_Number;
     pgm->commentLine = (char *) malloc(MAX_COMMENT_LINE_LENGTH);
     if (pgm->commentLine == NULL)
         return EXIT_MALLOC_FAILED;
@@ -85,13 +85,13 @@ int dimen(FILE *inputFile, PGMImage *pgm)
     pgm->imageData = (unsigned char *)malloc(pgm->nImageBytes);
     if (pgm->imageData == NULL)
 		return EXIT_MALLOC_FAILED;
-    if (pgm->magic == MAGIC_NUMBER_ASCII_PGM)
+    if (pgm->magicNum == MAGIC_NUMBER_ASCII_PGM)
     {
         int dataResult = readASCII(inputFile, pgm);
         if (dataResult != EXIT_NO_ERRORS)
             return dataResult;
     }
-    else if (pgm->magic == MAGIC_NUMBER_RAW_PGM)
+    else if (pgm->magicNum == MAGIC_NUMBER_RAW_PGM)
     {
         int dataResult = readBINARY(inputFile, pgm);
         if (dataResult != EXIT_NO_ERRORS)

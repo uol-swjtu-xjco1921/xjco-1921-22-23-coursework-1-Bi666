@@ -33,7 +33,7 @@ int main(int argc, char **argv)
     if (writeResult != EXIT_NO_ERRORS)
         handleError(writeResult, outputFile);
 
-    printf("CONVERTED");
+    printf("CONVERTED\n");
     free(pgm->commentLine);
     pgm->commentLine = NULL;
 	free(pgm->imageData);

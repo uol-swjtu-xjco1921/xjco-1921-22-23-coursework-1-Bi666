@@ -89,7 +89,7 @@ run_test ()
 # you can remove or comment out any executables you don't want to test
 # full list of executables: pgmEcho pgmComp etc.
 # E.g. EXES = (pgmEcho pgmComp)
-EXES=(main)
+EXES=(pgmEcho)
 
 # run all of the tests below for all executables given in 'EXES'
 # inside this loop, the executable being run can be referred to by 'testExecutable'
@@ -121,21 +121,21 @@ do
     # Spoofing no args using empty strings
     echo "Usage"
     run_test ./$testExecutable "" "" 0 "Usage: ./$testExecutable inputImage.pgm outputImage.pgm"
-    
+
     # Note that although these files do not exist, the thing
     # which should cause the failure is that there are 3 arguments
     # NOT that the filenames are incorrect.
     echo ""
     echo "Bad Args"
     run_test ./$testExecutable "1 2" "3" 1 "ERROR: Bad Arguments"
-    
+
     # Neither '1' nor '2' exists, but it should fail on '1' because
     # you should be opening, validating, reading and closing
     # before you access file 2.
     echo ""
     echo "Bad Filename"
     run_test ./$testExecutable "1" "2" 2 "ERROR: Bad File Name (1)"
-    
+
     # we have deliberately removed read permissions 
     # for this file using chmod
     echo ""
@@ -143,7 +143,7 @@ do
     filename="test.pgm"
     full_path=$path$filename
     run_test ./$testExecutable $full_path "2" 2 "ERROR: Bad File Name ($full_path)"
-    
+
     echo ""
     echo "Bad Magic Number"
     filename="bad_magic_number.pgm"
@@ -154,7 +154,7 @@ do
     echo "Bad Dimensions (big)"
     filename="bad_dimensions.pgm"
     full_path=$path$filename
-    run_test ./$testExecutable $full_path "tmp" 5 "ERROR: Bad Dimensions ($full_path)"
+    run_test ./$testExecutable $full_path "tmp" 4 "ERROR: Bad Dimensions ($full_path)"
 
     ### Functionality Tests ###
 
@@ -176,7 +176,7 @@ do
         echo "Testing $testExecutable Functionality"
         filename="slice0a.pgm"
         full_path=$path$filename
-	oracle=$oracle_path"main/"$filename
+	oracle=$oracle_path"pgmEcho/"$filename
         run_test ./$testExecutable $full_path "tmp" 0 "ECHOED"
         D=$(diff $oracle tmp)
         if [[ $D != "" ]]

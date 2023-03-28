@@ -8,12 +8,12 @@ int reduargc(int argc, char **argv)
 {
     if (argc == 1)
     {
-        printf("Usage: %s inputImage.pgm reduction_factor outputImage.pgm", argv[0]);
+        printf("Usage: %s inputImage.pgm reduction_factor outputImage.pgm\n", argv[0]);
         return 2;
     }
     if (argc != 4)
     {
-        printf("ERROR: Bad Argument Count");
+        printf("ERROR: Bad Argument Count\n");
         return EXIT_WRONG_ARG_COUNT;
     }
     return EXIT_NO_ERRORS;
@@ -21,7 +21,7 @@ int reduargc(int argc, char **argv)
 
 int reducePGM(int n, PGMImage *pgmorg, PGMImage *pgmnew)
 {
-    pgmnew->magic = pgmorg->magic;
+    pgmnew->magicNum = pgmorg->magicNum;
     pgmnew->maxGray = 255;
     pgmnew->width = (pgmorg->width - 1) / n + 1;
     pgmnew->height = (pgmorg->height - 1) / n + 1;;

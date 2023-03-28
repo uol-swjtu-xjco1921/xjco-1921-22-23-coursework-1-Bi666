@@ -9,7 +9,7 @@ CC     = gcc
 # -g enables the use of GDB
 CFLAGS = -std=c99 -Wall -Werror -g
 # this is your list of executables which you want to compile with all
-EXE    = main
+EXE    = pgmEcho
 
 # we put 'all' as the first command as this will be run if you just enter 'make'
 all: ${EXE}
@@ -21,9 +21,9 @@ clean:
 
 # this is a rule to define how .o files will be compiled
 # it means we do not have to write a rule for each .o file
-# main.o will be compiled by this rule as:
-# main.o: main.c
-# gcc -c -std=c99 -g main.c -o main.o
+# pgmEcho.o will be compiled by this rule as:
+# pgmEcho.o: pgmEcho.c
+# gcc -c -std=c99 -g pgmEcho.c -o pgmEcho.o
 
 %.o: %.c
 	$(CC) -c $(CFLAGS) $< -o $@
@@ -33,5 +33,5 @@ clean:
 # but as you refactor and add more .c and .h files
 # these recipes will become more complex.
 
-main: main.o pgmFile.o error.o
+pgmEcho: pgmEcho.o
 	$(CC) $(CCFLAGS) $^ -o $@

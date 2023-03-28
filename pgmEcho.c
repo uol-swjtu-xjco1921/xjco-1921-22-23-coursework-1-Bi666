@@ -32,7 +32,8 @@ int main(int argc, char **argv)
     int writeResult = writeASCII(outputFile, pgmE);
     if (writeResult != EXIT_NO_ERRORS)
         handleError(writeResult, outputFile);
-        
+    else
+        printf("ECHOED\n");
     free(pgmE->commentLine);
     pgmE->commentLine = NULL;
 	free(pgmE->imageData);
