@@ -9,7 +9,7 @@ CC     = gcc
 # -g enables the use of GDB
 CFLAGS = -std=c99 -Wall -Werror -g
 # this is your list of executables which you want to compile with all
-EXE    = pgmEcho
+EXE    = pgmEcho pgmComp pgma2b pgmb2a pgmReduce
 
 # we put 'all' as the first command as this will be run if you just enter 'make'
 all: ${EXE}
@@ -33,5 +33,13 @@ clean:
 # but as you refactor and add more .c and .h files
 # these recipes will become more complex.
 
-pgmEcho: pgmEcho.o
+pgmEcho: pgmEcho.o pgmFile.o error.o
+	$(CC) $(CCFLAGS) $^ -o $@
+pgmComp: pgmComp.o pgmFile.o compare.o error.o
+	$(CC) $(CCFLAGS) $^ -o $@
+pgma2b: pgma2b.o pgmFile.o error.o
+	$(CC) $(CCFLAGS) $^ -o $@
+pgmb2a: pgmb2a.o pgmFile.o error.o
+	$(CC) $(CCFLAGS) $^ -o $@
+pgmReduce: pgmReduce.o pgmFile.o reduce.o error.o
 	$(CC) $(CCFLAGS) $^ -o $@

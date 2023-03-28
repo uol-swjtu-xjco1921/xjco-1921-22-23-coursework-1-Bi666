@@ -168,7 +168,6 @@ int writeBINARY(const char *filename, PGMImage *pgm)
 	}
     for (unsigned char *nextGrayValue = pgm->imageData; nextGrayValue < pgm->imageData + pgm->nImageBytes; nextGrayValue++)
 	{
-		int nextCol = (nextGrayValue - pgm->imageData + 1) % (pgm->width);
         nBytesWritten = fputc(*nextGrayValue, outputFile);
 		if (nBytesWritten < 0)
 		{

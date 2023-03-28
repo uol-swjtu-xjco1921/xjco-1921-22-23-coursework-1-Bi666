@@ -89,7 +89,7 @@ run_test ()
 # you can remove or comment out any executables you don't want to test
 # full list of executables: pgmEcho pgmComp etc.
 # E.g. EXES = (pgmEcho pgmComp)
-EXES=(pgmEcho)
+EXES=(pgmEcho pgmComp pgma2b pgmb2a pgmReduce)
 
 # run all of the tests below for all executables given in 'EXES'
 # inside this loop, the executable being run can be referred to by 'testExecutable'
@@ -127,7 +127,7 @@ do
     # NOT that the filenames are incorrect.
     echo ""
     echo "Bad Args"
-    run_test ./$testExecutable "1 2" "3" 1 "ERROR: Bad Arguments"
+    run_test ./$testExecutable "1 2" "3" 1 "ERROR: Bad Argument Count"
 
     # Neither '1' nor '2' exists, but it should fail on '1' because
     # you should be opening, validating, reading and closing
