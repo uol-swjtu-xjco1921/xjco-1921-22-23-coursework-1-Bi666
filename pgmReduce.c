@@ -17,7 +17,7 @@ int main(int argc, char **argv)
     char *outputFile = argv[3];
     char *endptr;
     int n = strtol(argv[2], &endptr, 10);
-    if (*endptr != '\0' || n == 0) {
+    if (*endptr != '\0' || n <= 0) {
         printf("Invalid Factor Integer n\n");
         return EXIT_MISCELLANEOUS;
     }
@@ -29,6 +29,20 @@ int main(int argc, char **argv)
         handleError(EXIT_MALLOC_FAILED, inputFile);
         return EXIT_MALLOC_FAILED;
     }
+    pgmorg->width = 0;
+    pgmorg->height = 0;
+    pgmorg->maxGray = 255;
+    pgmorg->imageData = NULL;
+    pgmorg->commentLine = NULL;
+    pgmorg->nImageBytes = 0;
+    pgmorg->magicNum = 0;
+    pgmnew->width = 0;
+    pgmnew->height = 0;
+    pgmnew->maxGray = 255;
+    pgmnew->imageData = NULL;
+    pgmnew->commentLine = NULL;
+    pgmnew->nImageBytes = 0;
+    pgmnew->magicNum = 0;
 
     int readResult = readPGM(inputFile, pgmorg);
     if (readResult != EXIT_NO_ERRORS)

@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "pgm.h"
 #include "pgmFile.h"
 
@@ -40,8 +41,10 @@ int magic(FILE *inputFile, PGMImage *pgm)
     // Check magic number
     if (*magic_Number != MAGIC_NUMBER_RAW_PGM && *magic_Number != MAGIC_NUMBER_ASCII_PGM)
         return EXIT_BAD_MAGIC_NUMBER;
+    if (pgm->magicNum != 0 && pgm->magicNum != *magic_Number)
+        return EXIT_BAD_MAGIC_NUMBER;
     pgm->magicNum = *magic_Number;
-    pgm->commentLine = (char *) malloc(MAX_COMMENT_LINE_LENGTH);
+    pgm->commentLine = (char *) malloc(MAX_COMMENT_LINE_LENGTH + 1);
     if (pgm->commentLine == NULL)
         return EXIT_MALLOC_FAILED;
     int dataResult = dimen(inputFile, pgm);
@@ -63,9 +66,12 @@ int dimen(FILE *inputFile, PGMImage *pgm)
     char nextChar = fgetc(inputFile);
     if (nextChar == '#')
     {
-        char *commentString = fgets(pgm->commentLine, MAX_COMMENT_LINE_LENGTH, inputFile);
-        if (commentString == NULL)
+        char *commentString = fgets(pgm->commentLine, MAX_COMMENT_LINE_LENGTH + 1, inputFile);
+        if (commentString == NULL || strlen(commentString) <= 1 || strlen(commentString) > 127)
             return EXIT_COMMENT_LINE;
+        for (int i = 0; i < strlen(commentString); i++)
+            if (commentString[i] < 0 || commentString[i] > 127)
+                return EXIT_COMMENT_LINE;
     }
     else ungetc(nextChar, inputFile);
     // Read image dimensions and max gray value
@@ -113,15 +119,24 @@ int readASCII(FILE *inputFile, PGMImage *pgm){
 		}
 		*nextGrayValue = (unsigned char) grayValue;
 	}
+    int grayValue = -1;
+    int scanCount = fscanf(inputFile, " %u", &grayValue);
+    if (scanCount == 1)
+		{
+			free(pgm->imageData);
+            pgm->imageData = NULL;
+			return EXIT_BAD_DATA;
+		}
     return EXIT_NO_ERRORS;
 }
 
 int readBINARY(FILE *inputFile, PGMImage *pgm)
 {
     unsigned char line;
-    fread(&line, sizeof(unsigned char),  1, inputFile);
-    size_t nBytes = fread(pgm->imageData, sizeof(unsigned char),  pgm->width * pgm->height, inputFile);
-    if (nBytes != pgm->width * pgm->height)
+    fread(&line, sizeof(unsigned char), 1, inputFile);
+    size_t nBytes = fread(pgm->imageData, sizeof(unsigned char), pgm->width * pgm->height, inputFile);
+    size_t empty = fread(pgm->imageData, sizeof(unsigned char), 1, inputFile);
+    if (nBytes != pgm->width * pgm->height || empty != 0)
     {
         free(pgm->imageData);
         pgm->imageData = NULL;

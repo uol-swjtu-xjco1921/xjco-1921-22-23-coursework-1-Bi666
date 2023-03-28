@@ -21,6 +21,13 @@ int main(int argc, char **argv)
         handleError(EXIT_MALLOC_FAILED, inputFile);
         return EXIT_MALLOC_FAILED;
     }
+    pgm->width = 0;
+    pgm->height = 0;
+    pgm->maxGray = 255;
+    pgm->imageData = NULL;
+    pgm->commentLine = NULL;
+    pgm->nImageBytes = 0;
+    pgm->magicNum = MAGIC_NUMBER_RAW_PGM;
 
     int readResult = readPGM(inputFile, pgm);
     if (readResult != EXIT_NO_ERRORS)
@@ -32,8 +39,7 @@ int main(int argc, char **argv)
     int writeResult = writeASCII(outputFile, pgm);
     if (writeResult != EXIT_NO_ERRORS)
         handleError(writeResult, outputFile);
-
-    printf("CONVERTED\n");
+    else printf("CONVERTED\n");
     free(pgm->commentLine);
     pgm->commentLine = NULL;
 	free(pgm->imageData);

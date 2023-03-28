@@ -21,6 +21,13 @@ int main(int argc, char **argv)
         handleError(EXIT_MALLOC_FAILED, inputFile);
         return EXIT_MALLOC_FAILED;
     }
+    pgmE->width = 0;
+    pgmE->height = 0;
+    pgmE->maxGray = 255;
+    pgmE->imageData = NULL;
+    pgmE->commentLine = NULL;
+    pgmE->nImageBytes = 0;
+    pgmE->magicNum = 0;
 
     int readResult = readPGM(inputFile, pgmE);
     if (readResult != EXIT_NO_ERRORS)
