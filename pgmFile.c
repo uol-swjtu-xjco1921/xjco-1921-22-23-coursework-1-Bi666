@@ -25,9 +25,9 @@ int readPGM(const char *filename, PGMImage *pgm)
         return EXIT_BAD_FILE_NAME;
     // Read magic number
     int dataResult = magic(inputFile, pgm);
+    fclose(inputFile);
     if (dataResult != EXIT_NO_ERRORS)
         return dataResult;
-    fclose(inputFile);
     return EXIT_NO_ERRORS;
 }
 
@@ -39,12 +39,12 @@ int magic(FILE *inputFile, PGMImage *pgm)
     magic_number[1] = getc(inputFile);
     // Check magic number
     if (*magic_Number == MAGIC_NUMBER_RAW_PGM && *magic_Number == MAGIC_NUMBER_ASCII_PGM)
-    {
-        fclose(inputFile);
         return EXIT_BAD_MAGIC_NUMBER;
-    }
     pgm->magic = *magic_Number;
-    int dataResult = dimen(inputFile, pgm, magic_Number);
+    pgm->commentLine = (char *) malloc(MAX_COMMENT_LINE_LENGTH);
+    if (pgm->commentLine == NULL)
+        return EXIT_MALLOC_FAILED;
+    int dataResult = dimen(inputFile, pgm);
     if (dataResult != EXIT_NO_ERRORS)
     {
         free(pgm->commentLine);
@@ -56,25 +56,16 @@ int magic(FILE *inputFile, PGMImage *pgm)
     return EXIT_NO_ERRORS;
 }
 
-int dimen(FILE *inputFile, PGMImage *pgm, unsigned short *magic_Number)
+int dimen(FILE *inputFile, PGMImage *pgm)
 {
     int scanCount = fscanf(inputFile, " ");
     // Read comment line if present
     char nextChar = fgetc(inputFile);
     if (nextChar == '#')
     {
-        pgm->commentLine = (char *) malloc(MAX_COMMENT_LINE_LENGTH);
-        if (pgm->commentLine == NULL)
-        {
-            fclose(inputFile);
-            return EXIT_MALLOC_FAILED;
-        }
         char *commentString = fgets(pgm->commentLine, MAX_COMMENT_LINE_LENGTH, inputFile);
         if (commentString == NULL)
-        {
-            fclose(inputFile);
             return EXIT_COMMENT_LINE;
-        }
     }
     else ungetc(nextChar, inputFile);
     // Read image dimensions and max gray value
@@ -86,29 +77,21 @@ int dimen(FILE *inputFile, PGMImage *pgm, unsigned short *magic_Number)
             (pgm->height < MIN_IMAGE_DIMENSION  )   ||
             (pgm->height > MAX_IMAGE_DIMENSION  )
         )
-    {
-		fclose(inputFile);
 		return EXIT_BAD_DIMENSIONS;
-	}
-    if (pgm->maxGray  != 255) {
-		fclose(inputFile);
+    if (pgm->maxGray  != 255)
 		return EXIT_BAD_MAXGRAY;
-    }
     pgm->nImageBytes = (pgm->width) * (pgm->height) * sizeof(unsigned char);
     // Allocate memory for image data
     pgm->imageData = (unsigned char *)malloc(pgm->nImageBytes);
     if (pgm->imageData == NULL)
-	{
-		fclose(inputFile);
 		return EXIT_MALLOC_FAILED;
-	}
-    if (*magic_Number == MAGIC_NUMBER_ASCII_PGM)
+    if (pgm->magic == MAGIC_NUMBER_ASCII_PGM)
     {
         int dataResult = readASCII(inputFile, pgm);
         if (dataResult != EXIT_NO_ERRORS)
             return dataResult;
     }
-    else if (*magic_Number == MAGIC_NUMBER_RAW_PGM)
+    else if (pgm->magic == MAGIC_NUMBER_RAW_PGM)
     {
         int dataResult = readBINARY(inputFile, pgm);
         if (dataResult != EXIT_NO_ERRORS)
@@ -126,12 +109,10 @@ int readASCII(FILE *inputFile, PGMImage *pgm){
 		{
 			free(pgm->imageData);
             pgm->imageData = NULL;
-			fclose(inputFile);
 			return EXIT_BAD_DATA;
 		}
 		*nextGrayValue = (unsigned char) grayValue;
 	}
-    fclose(inputFile);
     return EXIT_NO_ERRORS;
 }
 
@@ -144,10 +125,8 @@ int readBINARY(FILE *inputFile, PGMImage *pgm)
     {
         free(pgm->imageData);
         pgm->imageData = NULL;
-        fclose(inputFile);
         return EXIT_BAD_DATA;
     }
-    fclose(inputFile);
     return EXIT_NO_ERRORS;
 }
 
