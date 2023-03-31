@@ -7,21 +7,26 @@
 
 int main(int argc, char **argv)
 {
+    //Check that the number of command lines is correct
     int ar = reduargc(argc, argv);
     if (ar == 2)
         return EXIT_NO_ERRORS;
     else if (ar != EXIT_NO_ERRORS)
         return ar;
 
+    //Save the filename read in and written out
     char *inputFile = argv[1];
     char *outputFile = argv[3];
+    //Convert the factor to type of int
     char *endptr;
     int n = strtol(argv[2], &endptr, 10);
-    if (*endptr != '\0' || n <= 0) {
-        printf("Invalid Factor Integer n\n");
+    if (*endptr != '\0' || n <= 0) 
+    {
+        printf("ERROR: Miscellaneous (Invalid Factor Integer n)\n");
         return EXIT_MISCELLANEOUS;
     }
     
+    //Dynamically allocated the struct
     PGMImage *pgmorg = (PGMImage*)malloc(sizeof(PGMImage));
     PGMImage *pgmnew = (PGMImage*)malloc(sizeof(PGMImage));
     if (pgmorg == NULL || pgmnew == NULL) 
@@ -29,6 +34,7 @@ int main(int argc, char **argv)
         handleError(EXIT_MALLOC_FAILED, inputFile);
         return EXIT_MALLOC_FAILED;
     }
+    //Initialized the struct
     pgmorg->width = 0;
     pgmorg->height = 0;
     pgmorg->maxGray = 255;
@@ -44,6 +50,7 @@ int main(int argc, char **argv)
     pgmnew->nImageBytes = 0;
     pgmnew->magicNum = 0;
 
+    //Processing pgm file data read in
     int readResult = readPGM(inputFile, pgmorg);
     if (readResult != EXIT_NO_ERRORS)
     {
@@ -58,6 +65,7 @@ int main(int argc, char **argv)
         return reduceResult;
     }
     
+    //Writing out the output file
     int writeResult = 0;
     if (pgmnew->magicNum == MAGIC_NUMBER_ASCII_PGM)
         writeResult = writeASCII(outputFile, pgmnew);
@@ -68,6 +76,7 @@ int main(int argc, char **argv)
     else
         printf("REDUCED\n");
     
+    //Release the memory allocations
     free(pgmorg->commentLine);
     pgmorg->commentLine = NULL;
 	free(pgmorg->imageData);

@@ -6,11 +6,13 @@
 
 int reduargc(int argc, char **argv)
 {
+    //No commandline arguments are entered
     if (argc == 1)
     {
         printf("Usage: %s inputImage.pgm reduction_factor outputImage.pgm\n", argv[0]);
         return 2;
     }
+    //Nnumber of commandline does not match
     if (argc != 4)
     {
         printf("ERROR: Bad Argument Count\n");
@@ -21,6 +23,7 @@ int reduargc(int argc, char **argv)
 
 int reducePGM(int n, PGMImage *pgmorg, PGMImage *pgmnew)
 {
+    //Write dimension to the new file
     pgmnew->magicNum = pgmorg->magicNum;
     pgmnew->maxGray = 255;
     pgmnew->width = (pgmorg->width - 1) / n + 1;
@@ -39,6 +42,7 @@ int reducePGM(int n, PGMImage *pgmorg, PGMImage *pgmnew)
         pgmnew = NULL;
         return EXIT_MALLOC_FAILED;
     }
+    //Write data into the new file
     unsigned char *next = pgmnew->imageData;
     for (int row = 0; row < pgmorg->height; row += n)
         for (int col = 0; col < pgmorg->width; col += n) {

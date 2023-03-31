@@ -5,6 +5,7 @@
 
 void handleError(char readResult, const char *filename)
 {
+    //Output an error message based on returned numbers
     if (readResult == EXIT_BAD_FILE_NAME)
         printf("ERROR: Bad File Name (%s)\n", filename);
     if (readResult == EXIT_BAD_MAGIC_NUMBER)
