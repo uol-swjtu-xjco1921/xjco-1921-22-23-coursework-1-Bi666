@@ -35,13 +35,13 @@ int main(int argc, char *argv[])
     pgm1->commentLine = NULL;
     pgm1->nImageBytes = 0;
     pgm1->magicNum = 0;
-    pgm1->width = 0;
-    pgm1->height = 0;
-    pgm1->maxGray = 255;
-    pgm1->imageData = NULL;
-    pgm1->commentLine = NULL;
-    pgm1->nImageBytes = 0;
-    pgm1->magicNum = 0;
+    pgm2->width = 0;
+    pgm2->height = 0;
+    pgm2->maxGray = 255;
+    pgm2->imageData = NULL;
+    pgm2->commentLine = NULL;
+    pgm2->nImageBytes = 0;
+    pgm2->magicNum = 0;
 
     //Processing pgm file data read in
     int readResult = readPGM(filename1, pgm1);
@@ -65,6 +65,8 @@ int main(int argc, char *argv[])
     pgm1->commentLine = NULL;
 	free(pgm1->imageData);
     pgm1->imageData = NULL;
+    free(pgm1);
+    pgm1 = NULL;
     free(pgm2->commentLine);
     pgm2->commentLine = NULL;
 	free(pgm2->imageData);

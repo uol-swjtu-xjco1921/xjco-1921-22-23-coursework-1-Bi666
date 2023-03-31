@@ -55,6 +55,8 @@ int main(int argc, char **argv)
     if (readResult != EXIT_NO_ERRORS)
     {
         handleError(readResult, inputFile);
+        free(pgmnew);
+        pgmnew = NULL;
         return readResult;
     }
 
