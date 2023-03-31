@@ -46,6 +46,8 @@ int main(int argc, char **argv)
     int readResult = readPGM(inputFile, pgmorg);
     if (readResult != EXIT_NO_ERRORS)
     {
+        free(pgmorg);
+        pgmorg = NULL;
         handleError(readResult, inputFile);
         return readResult;
     }

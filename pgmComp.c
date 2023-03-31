@@ -39,6 +39,8 @@ int main(int argc, char *argv[])
     int readResult = readPGM(filename1, pgm1);
     if (readResult != EXIT_NO_ERRORS)
     {
+        free(pgm1);
+        pgm1 = NULL;
         handleError(readResult, filename1);
         return readResult;
     }

@@ -37,6 +37,8 @@ int main(int argc, char **argv)
     int readResult = readPGM(inputFile, pgmE);
     if (readResult != EXIT_NO_ERRORS)
     {
+        free(pgmE);
+        pgmE = NULL;
         handleError(readResult, inputFile);
         return readResult;
     }

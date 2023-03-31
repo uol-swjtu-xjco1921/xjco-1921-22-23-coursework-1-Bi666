@@ -30,11 +30,7 @@ int readPGM(const char *filename, PGMImage *pgm)
     int dataResult = magic(inputFile, pgm);
     fclose(inputFile);
     if (dataResult != EXIT_NO_ERRORS)
-    {
-        free(pgm);
-        pgm = NULL;
         return dataResult;
-    }
     return EXIT_NO_ERRORS;
 }
 
