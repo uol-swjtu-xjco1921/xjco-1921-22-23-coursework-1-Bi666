@@ -21,8 +21,7 @@ int main(int argc, char *argv[])
 
     //Dynamically allocated the struct
     PGMImage *pgm1 = (PGMImage*)malloc(sizeof(PGMImage));
-    PGMImage *pgm2 = (PGMImage*)malloc(sizeof(PGMImage));
-    if (pgm1 == NULL || pgm2 == NULL) 
+    if (pgm1 == NULL) 
     {
         handleError(EXIT_MALLOC_FAILED, filename1);
         return EXIT_MALLOC_FAILED;
@@ -35,13 +34,6 @@ int main(int argc, char *argv[])
     pgm1->commentLine = NULL;
     pgm1->nImageBytes = 0;
     pgm1->magicNum = 0;
-    pgm2->width = 0;
-    pgm2->height = 0;
-    pgm2->maxGray = 255;
-    pgm2->imageData = NULL;
-    pgm2->commentLine = NULL;
-    pgm2->nImageBytes = 0;
-    pgm2->magicNum = 0;
 
     //Processing pgm file data read in
     int readResult = readPGM(filename1, pgm1);
@@ -50,9 +42,32 @@ int main(int argc, char *argv[])
         handleError(readResult, filename1);
         return readResult;
     }
+
+    PGMImage *pgm2 = (PGMImage*)malloc(sizeof(PGMImage));
+    if (pgm2 == NULL) 
+    {
+        handleError(EXIT_MALLOC_FAILED, filename1);
+        return EXIT_MALLOC_FAILED;
+    }
+    pgm2->width = 0;
+    pgm2->height = 0;
+    pgm2->maxGray = 255;
+    pgm2->imageData = NULL;
+    pgm2->commentLine = NULL;
+    pgm2->nImageBytes = 0;
+    pgm2->magicNum = 0;
+
     readResult = readPGM(filename2, pgm2);
     if (readResult != EXIT_NO_ERRORS)
     {
+        free(pgm1->commentLine);
+        pgm1->commentLine = NULL;
+        free(pgm1->imageData);
+        pgm1->imageData = NULL;
+        free(pgm1);
+        pgm1 = NULL;
+        free(pgm2);
+        pgm2 = NULL;
         handleError(readResult, filename1);
         return readResult;
     }

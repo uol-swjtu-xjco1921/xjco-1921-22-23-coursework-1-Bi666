@@ -28,8 +28,7 @@ int main(int argc, char **argv)
     
     //Dynamically allocated the struct
     PGMImage *pgmorg = (PGMImage*)malloc(sizeof(PGMImage));
-    PGMImage *pgmnew = (PGMImage*)malloc(sizeof(PGMImage));
-    if (pgmorg == NULL || pgmnew == NULL) 
+    if (pgmorg == NULL) 
     {
         handleError(EXIT_MALLOC_FAILED, inputFile);
         return EXIT_MALLOC_FAILED;
@@ -42,6 +41,21 @@ int main(int argc, char **argv)
     pgmorg->commentLine = NULL;
     pgmorg->nImageBytes = 0;
     pgmorg->magicNum = 0;
+
+    //Processing pgm file data read in
+    int readResult = readPGM(inputFile, pgmorg);
+    if (readResult != EXIT_NO_ERRORS)
+    {
+        handleError(readResult, inputFile);
+        return readResult;
+    }
+
+    PGMImage *pgmnew = (PGMImage*)malloc(sizeof(PGMImage));
+    if (pgmnew == NULL) 
+    {
+        handleError(EXIT_MALLOC_FAILED, inputFile);
+        return EXIT_MALLOC_FAILED;
+    }
     pgmnew->width = 0;
     pgmnew->height = 0;
     pgmnew->maxGray = 255;
@@ -50,19 +64,17 @@ int main(int argc, char **argv)
     pgmnew->nImageBytes = 0;
     pgmnew->magicNum = 0;
 
-    //Processing pgm file data read in
-    int readResult = readPGM(inputFile, pgmorg);
-    if (readResult != EXIT_NO_ERRORS)
-    {
-        handleError(readResult, inputFile);
-        free(pgmnew);
-        pgmnew = NULL;
-        return readResult;
-    }
-
     int reduceResult = reducePGM(n, pgmorg, pgmnew);
     if (reduceResult != EXIT_NO_ERRORS)
     {
+        free(pgmorg->commentLine);
+        pgmorg->commentLine = NULL;
+        free(pgmorg->imageData);
+        pgmorg->imageData = NULL;
+        free(pgmorg);
+        pgmorg = NULL;
+        free(pgmnew);
+        pgmnew = NULL;
         handleError(reduceResult, inputFile);
         return reduceResult;
     }
